@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   # Build tools
   build-essential \
   # Utilities
+  file \
   jq \
   nano \
   unzip \

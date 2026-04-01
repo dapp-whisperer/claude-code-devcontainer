@@ -207,6 +207,33 @@ def setup_global_gitignore():
     gitignore = home / ".gitignore_global"
     local_gitconfig = home / ".gitconfig.local"
     host_gitconfig = home / ".gitconfig"
+    host_copy = home / ".gitconfig.host"
+
+    # Copy host gitconfig, stripping includes that point to .gitconfig.local
+    # to avoid circular includes (host config may include ~/.gitconfig.local,
+    # which inside the container resolves to our generated file).
+    if host_gitconfig.exists():
+        lines = host_gitconfig.read_text(encoding="utf-8").splitlines(keepends=True)
+        filtered: list[str] = []
+        skip_next_path = False
+        for line in lines:
+            stripped = line.strip()
+            if stripped == "[include]":
+                skip_next_path = True
+                filtered.append(line)
+            elif skip_next_path and stripped.startswith("path"):
+                val = stripped.split("=", 1)[1].strip() if "=" in stripped else ""
+                if ".gitconfig.local" in val:
+                    # Remove the orphaned [include] header too
+                    if filtered and filtered[-1].strip() == "[include]":
+                        filtered.pop()
+                else:
+                    filtered.append(line)
+                    skip_next_path = False
+            else:
+                skip_next_path = False
+                filtered.append(line)
+        host_copy.write_text("".join(filtered), encoding="utf-8")
 
     # Create global gitignore with common patterns
     patterns = """\
@@ -255,10 +282,10 @@ node_modules/
     # Delta config is included here so it works even if host doesn't have it configured
     local_config = f"""\
 # Container-local git config
-# Includes host config (mounted read-only) and adds container settings
+# Includes host config (copied to break circular includes) and adds container settings
 
 [include]
-    path = {host_gitconfig}
+    path = {host_copy}
 
 [core]
     excludesfile = {gitignore}
