@@ -1,0 +1,35 @@
+{
+  "id": "monokai-pro",
+  "name": "Monokai Pro",
+  "type": "dark",
+  "author": "dev",
+  "description": "Monokai Pro theme matching Ghostty palette",
+  "ui": {
+    "background": "#2d2a2e",
+    "foreground": "#fcfcfa",
+    "primary": "#ab9df2",
+    "accent": "#78dce8",
+    "border": "#5b595c"
+  },
+  "terminal": {
+    "background": "#2d2a2e",
+    "foreground": "#fcfcfa",
+    "cursor": "#c1c0c0",
+    "red": "#ff6188",
+    "green": "#a9dc76",
+    "yellow": "#ffd866",
+    "blue": "#fc9867",
+    "magenta": "#ab9df2",
+    "cyan": "#78dce8",
+    "white": "#fcfcfa",
+    "black": "#2d2a2e",
+    "brightBlack": "#727072",
+    "brightRed": "#ff6188",
+    "brightGreen": "#a9dc76",
+    "brightYellow": "#ffd866",
+    "brightBlue": "#fc9867",
+    "brightMagenta": "#ab9df2",
+    "brightCyan": "#78dce8",
+    "brightWhite": "#fcfcfa"
+  }
+}

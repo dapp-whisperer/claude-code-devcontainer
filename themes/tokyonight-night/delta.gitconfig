@@ -1,0 +1,26 @@
+[delta "tokyonight-night"]
+	blame-palette = "#1a1b26 #16161e #13131a #292e42 #414868"
+	commit-decoration-style = "#545c7e" bold box ul
+	dark = true
+	file-decoration-style = "#545c7e"
+	file-style = "#c0caf5"
+	hunk-header-decoration-style = "#545c7e" box ul
+	hunk-header-file-style = bold
+	hunk-header-line-number-style = bold "#565f89"
+	hunk-header-style = file line-number syntax
+	line-numbers-left-style = "#3b4261"
+	line-numbers-minus-style = "#914c54"
+	line-numbers-plus-style = "#449dab"
+	line-numbers-right-style = "#3b4261"
+	line-numbers-zero-style = "#3b4261"
+	minus-emph-style = syntax "#713137"
+	minus-style = syntax "#4a272f"
+	plus-emph-style = syntax "#2c5a66"
+	plus-style = syntax "#243e4a"
+	map-styles = \
+		bold purple => syntax "#3d2f5c", \
+		bold blue => syntax "#2a3a5c", \
+		bold cyan => syntax "#243e4a", \
+		bold yellow => syntax "#4a3f2f"
+	# Should match the name of the bat theme
+	syntax-theme = TokyoNight

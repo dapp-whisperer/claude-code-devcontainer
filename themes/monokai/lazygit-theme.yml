@@ -1,0 +1,31 @@
+  theme:
+    activeBorderColor:
+      - "#fc9867"
+      - bold
+    inactiveBorderColor:
+      - "#5b595c"
+    searchingActiveBorderColor:
+      - "#fc9867"
+      - bold
+    optionsTextColor:
+      - "#78dce8"
+    selectedLineBgColor:
+      - "#403e41"
+    cherryPickedCommitFgColor:
+      - "#78dce8"
+    cherryPickedCommitBgColor:
+      - "#ab9df2"
+    markedBaseCommitFgColor:
+      - "#78dce8"
+    markedBaseCommitBgColor:
+      - "#ffd866"
+    unstagedChangesColor:
+      - "#ff6188"
+    defaultFgColor:
+      - "#fcfcfa"
+  authorColors:
+    "*": "#ab9df2"
+git:
+  pagers:
+    - colorArg: always
+      pager: delta --paging=never --features=monokai

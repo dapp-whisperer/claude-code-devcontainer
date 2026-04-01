@@ -267,6 +267,9 @@ node_modules/
 [interactive]
     diffFilter = delta --color-only
 
+[include]
+    path = ~/.config/delta/theme.gitconfig
+
 [delta]
     navigate = true
     light = false
@@ -278,6 +281,12 @@ node_modules/
 
 [diff]
     colorMoved = default
+
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    ci = commit
 
 [gpg "ssh"]
     program = /usr/bin/ssh-keygen

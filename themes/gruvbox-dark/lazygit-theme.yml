@@ -1,0 +1,31 @@
+  theme:
+    activeBorderColor:
+      - "#fe8019"
+      - bold
+    inactiveBorderColor:
+      - "#504945"
+    searchingActiveBorderColor:
+      - "#fe8019"
+      - bold
+    optionsTextColor:
+      - "#83a598"
+    selectedLineBgColor:
+      - "#3c3836"
+    cherryPickedCommitFgColor:
+      - "#83a598"
+    cherryPickedCommitBgColor:
+      - "#b16286"
+    markedBaseCommitFgColor:
+      - "#83a598"
+    markedBaseCommitBgColor:
+      - "#fabd2f"
+    unstagedChangesColor:
+      - "#cc241d"
+    defaultFgColor:
+      - "#ebdbb2"
+  authorColors:
+    "*": "#b16286"
+git:
+  pagers:
+    - colorArg: always
+      pager: delta --paging=never --features=gruvbox-dark

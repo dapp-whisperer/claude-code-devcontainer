@@ -1,0 +1,19 @@
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+  --color=bg+:#2D4F67 \
+  --color=bg:#1F1F28 \
+  --color=border:#54546D \
+  --color=fg:#DCD7BA \
+  --color=gutter:#1F1F28 \
+  --color=header:#FFA066 \
+  --color=hl+:#7FB4CA \
+  --color=hl:#7FB4CA \
+  --color=info:#727169 \
+  --color=marker:#D27E99 \
+  --color=pointer:#D27E99 \
+  --color=prompt:#7E9CD8 \
+  --color=query:#DCD7BA:regular \
+  --color=scrollbar:#54546D \
+  --color=separator:#FFA066 \
+  --color=spinner:#D27E99"
+
+export BAT_THEME="Kanagawa"

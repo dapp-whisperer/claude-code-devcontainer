@@ -1,0 +1,15 @@
+themes {
+    tokyonight-night {
+        bg "#414868"
+        fg "#c0caf5"
+        red "#f7768e"
+        green "#9ece6a"
+        blue "#7aa2f7"
+        yellow "#e0af68"
+        magenta "#bb9af7"
+        orange "#ff9e64"
+        cyan "#7dcfff"
+        black "#1a1b26"
+        white "#c0caf5"
+    }
+}

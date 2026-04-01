@@ -6,7 +6,14 @@
     "args": {
       "TZ": "${localEnv:TZ:UTC}",
       "GIT_DELTA_VERSION": "0.18.2",
-      "ZSH_IN_DOCKER_VERSION": "1.2.1"
+      "ZSH_IN_DOCKER_VERSION": "1.2.1",
+      "NEOVIM_VERSION": "0.12.0",
+      "YAZI_VERSION": "26.1.22",
+      "EZA_VERSION": "0.23.4",
+      "LAZYGIT_VERSION": "0.60.0",
+      "GLOW_VERSION": "2.1.1",
+      "ZOXIDE_VERSION": "0.9.9",
+      "STARSHIP_VERSION": "1.24.2"
     }
   },
   "features": {

@@ -1,0 +1,31 @@
+  theme:
+    activeBorderColor:
+      - "#FFA066"
+      - bold
+    inactiveBorderColor:
+      - "#54546D"
+    searchingActiveBorderColor:
+      - "#FFA066"
+      - bold
+    optionsTextColor:
+      - "#7E9CD8"
+    selectedLineBgColor:
+      - "#2D4F67"
+    cherryPickedCommitFgColor:
+      - "#7E9CD8"
+    cherryPickedCommitBgColor:
+      - "#957FB8"
+    markedBaseCommitFgColor:
+      - "#7E9CD8"
+    markedBaseCommitBgColor:
+      - "#E6C384"
+    unstagedChangesColor:
+      - "#C34043"
+    defaultFgColor:
+      - "#DCD7BA"
+  authorColors:
+    "*": "#957FB8"
+git:
+  pagers:
+    - colorArg: always
+      pager: delta --paging=never --features=kanagawa-wave

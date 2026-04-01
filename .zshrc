@@ -1,8 +1,8 @@
 # shellcheck shell=bash
 # Zsh configuration for Claude Code devcontainer
 
-# Add Claude Code to PATH
-export PATH="$HOME/.local/bin:$PATH"
+# Add Claude Code and cargo to PATH
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 
 # fnm (Fast Node Manager)
 export FNM_DIR="$HOME/.fnm"
@@ -33,10 +33,18 @@ setopt ALWAYS_TO_END           # Move cursor to end after completion
 alias fd=fdfind
 alias sg=ast-grep
 alias claude-yolo='claude --dangerously-skip-permissions'
-alias ll='ls -lah --color=auto'
-alias la='ls -A --color=auto'
-alias l='ls -CF --color=auto'
 alias grep='grep --color=auto'
+alias vim=nvim
+alias y=yazi
+alias lgit=lazygit
+
+# eza aliases (replaces ls)
+alias ls='eza --icons'
+alias l='eza -l --icons'
+alias la='eza -a --icons'
+alias ll='eza -la --icons'
+alias lt='eza --tree --level=2 --icons'
+alias lta='eza --tree -a --icons'
 
 # fzf configuration - use fd for faster file finding
 export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
@@ -54,3 +62,20 @@ _fzf_compgen_dir() {
 
 # Source fzf shell integration (built-in since fzf 0.48+)
 eval "$(fzf --zsh)"
+
+# Source fzf theme (Catppuccin colors, updated by `theme` command)
+[[ -f ~/.config/fzf/theme.sh ]] && source ~/.config/fzf/theme.sh
+
+# zoxide (smart cd)
+eval "$(zoxide init zsh)"
+
+# Functions
+ff() {
+  # fzf file finder with bat preview
+  local file
+  file=$(fdfind --type f --hidden --follow --exclude .git | fzf --preview 'bat --color=always --style=numbers --line-range=:200 {}')
+  [[ -n "$file" ]] && ${EDITOR:-nvim} "$file"
+}
+
+# starship prompt (must be last init)
+eval "$(starship init zsh)"

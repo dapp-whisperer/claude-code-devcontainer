@@ -1,0 +1,24 @@
+[[mgr.prepend_keymap]]
+on   = "<Enter>"
+run  = '''shell 'bash ~/.config/yazi/scripts/open-editor.sh "$@"' --block'''
+desc = "Open in editor"
+
+[[mgr.prepend_keymap]]
+on   = "e"
+run  = '''shell 'glow -p -w 80 "$@"' --block'''
+desc = "View with glow"
+
+[[mgr.prepend_keymap]]
+on   = ["g", "n"]
+run  = 'shell "nvim ." --block'
+desc = "Open nvim in current directory"
+
+[[mgr.prepend_keymap]]
+on   = ["g", "z"]
+run  = "plugin zoxide"
+desc = "Jump to directory (zoxide)"
+
+[[mgr.prepend_keymap]]
+on   = ["g", "i"]
+run  = "plugin lazygit"
+desc = "Open lazygit"

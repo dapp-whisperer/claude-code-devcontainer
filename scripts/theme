@@ -1,0 +1,189 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Container-adapted theme switcher
+# Subset of dotfiles/scripts/theme — only tools present in the devcontainer.
+# Paths target ~/.config/<tool>/ directly (no stow).
+
+THEMES_DIR="$HOME/dotfiles/themes"
+CURRENT_FILE="$THEMES_DIR/current"
+
+# ── Helpers ──────────────────────────────────────────────────────────
+
+die() { echo "Error: $1" >&2; exit 1; }
+
+list_themes() {
+    for d in "$THEMES_DIR"/*/; do
+        [[ -f "$d/manifest.toml" ]] && basename "$d"
+    done
+}
+
+# Parse key = "value" from TOML manifest
+manifest_get() {
+    local file="$1" key="$2" val
+    val=$(grep -F "${key} = " "$file" | head -1 | sed 's/^[^=]*= *"\([^"]*\)"/\1/') || true
+    [[ -n "$val" ]] || die "Missing manifest key '$key' in $file"
+    echo "$val"
+}
+
+validate_value() {
+    local val="$1" label="$2"
+    [[ "$val" =~ ^[a-zA-Z0-9_.()\ -]+$ ]] || die "Invalid manifest value for '$label': $val"
+}
+
+# Inode-preserving sed
+sed_inplace() {
+    local pattern="$1" file="$2"
+    local content
+    content="$(sed "$pattern" "$file")"
+    printf '%s\n' "$content" > "$file"
+}
+
+replace_quoted() {
+    local key="$1" value="$2" file="$3"
+    sed_inplace "s/^${key} = \"[^\"]*\"/${key} = \"${value}\"/" "$file"
+}
+
+copy_over() {
+    local src="$1" dst="$2"
+    if [[ -f "$dst" ]]; then
+        cat "$src" > "$dst"
+    else
+        cp "$src" "$dst"
+    fi
+}
+
+# ── No args: show status ────────────────────────────────────────────
+
+if [[ $# -eq 0 ]]; then
+    current="(none)"
+    [[ -f "$CURRENT_FILE" ]] && current="$(tr -d '[:space:]' < "$CURRENT_FILE")"
+    echo "Current theme: $current"
+    echo ""
+    echo "Available themes:"
+    for t in $(list_themes); do
+        marker="  "
+        [[ "$t" == "$current" ]] && marker="* "
+        name=$(manifest_get "$THEMES_DIR/$t/manifest.toml" "name")
+        echo "  ${marker}${t}  ($name)"
+    done
+    exit 0
+fi
+
+# ── Switch theme ────────────────────────────────────────────────────
+
+THEME="$1"
+[[ "$THEME" =~ ^[a-zA-Z0-9_-]+$ ]] || die "Invalid theme name (only alphanumeric, hyphens, underscores allowed)"
+
+THEME_DIR="$THEMES_DIR/$THEME"
+
+[[ -d "$THEME_DIR" ]] || die "Theme '$THEME' not found. Run 'theme' to list available themes."
+[[ -f "$THEME_DIR/manifest.toml" ]] || die "Theme '$THEME' is missing manifest.toml"
+
+# Parse manifest — only keys for container tools
+MANIFEST="$THEME_DIR/manifest.toml"
+DISPLAY_NAME=$(manifest_get "$MANIFEST" "name")
+VARIANT=$(manifest_get "$MANIFEST" "variant")
+BTOP_NAME=$(manifest_get "$MANIFEST" "btop")
+NVIM_NAME=$(manifest_get "$MANIFEST" "neovim")
+DELTA_FEAT=$(manifest_get "$MANIFEST" "delta")
+BAT_NAME=$(manifest_get "$MANIFEST" "bat")
+TMUX_NAME=$(manifest_get "$MANIFEST" "tmux")
+
+validate_value "$DISPLAY_NAME" "name"
+validate_value "$VARIANT" "variant"
+validate_value "$BTOP_NAME" "btop"
+validate_value "$NVIM_NAME" "neovim"
+validate_value "$DELTA_FEAT" "delta"
+validate_value "$BAT_NAME" "bat"
+validate_value "$TMUX_NAME" "tmux"
+
+# ── Apply theme to tool configs ─────────────────────────────────────
+
+# btop
+replace_quoted "color_theme" "$BTOP_NAME" "$HOME/.config/btop/btop.conf"
+
+# neovim colorscheme
+sed_inplace "s/colorscheme = \".*\"/colorscheme = \"${NVIM_NAME}\"/" \
+    "$HOME/.config/nvim/lua/plugins/colorscheme.lua"
+
+# bat
+sed_inplace "s/^--theme=\".*\"/--theme=\"${BAT_NAME}\"/" \
+    "$HOME/.config/bat/config"
+
+# yazi glow flag: variant-aware (dark/light)
+sed_inplace "s/-s=[a-z]*/-s=${VARIANT}/" \
+    "$HOME/.config/yazi/yazi.toml"
+
+# tmux: swap catppuccin flavor name
+if [[ -f "$HOME/.config/tmux/tmux.conf" ]]; then
+    sed_inplace "s/@catppuccin_flavor '.*'/@catppuccin_flavor '${TMUX_NAME}'/" \
+        "$HOME/.config/tmux/tmux.conf"
+fi
+
+# ── Full file replacements ──────────────────────────────────────────
+
+# btop theme file
+if [[ -f "$THEME_DIR/btop.theme" ]]; then
+    mkdir -p "$HOME/.config/btop/themes"
+    copy_over "$THEME_DIR/btop.theme" "$HOME/.config/btop/themes/${BTOP_NAME}.theme"
+fi
+
+# yazi theme
+if [[ -f "$THEME_DIR/yazi-theme.toml" ]]; then
+    copy_over "$THEME_DIR/yazi-theme.toml" "$HOME/.config/yazi/theme.toml"
+fi
+
+# lazygit: concatenate base config + theme overlay
+cat "$HOME/.config/lazygit/base-config.yml" "$THEME_DIR/lazygit-theme.yml" \
+    > "$HOME/.config/lazygit/config.yml.tmp"
+cat "$HOME/.config/lazygit/config.yml.tmp" > "$HOME/.config/lazygit/config.yml"
+rm -f "$HOME/.config/lazygit/config.yml.tmp"
+
+# tmux: install custom flavor file for non-catppuccin themes
+if [[ -f "$THEME_DIR/tmux-theme.conf" ]]; then
+    TMUX_PLUGIN_THEMES="$HOME/.config/tmux/plugins/tmux/themes"
+    if [[ -d "$TMUX_PLUGIN_THEMES" ]]; then
+        copy_over "$THEME_DIR/tmux-theme.conf" "$TMUX_PLUGIN_THEMES/catppuccin_${TMUX_NAME}_tmux.conf"
+    fi
+    if [[ -d "$HOME/.config/tmux" ]]; then
+        cp "$THEME_DIR/tmux-theme.conf" "$HOME/.config/tmux/current-theme.conf"
+    fi
+fi
+
+# delta
+mkdir -p "$HOME/.config/delta"
+cp "$THEME_DIR/delta.gitconfig" "$HOME/.config/delta/theme.gitconfig"
+
+# fzf
+mkdir -p "$HOME/.config/fzf"
+cp "$THEME_DIR/fzf-theme.sh" "$HOME/.config/fzf/theme.sh"
+
+# bat theme file
+mkdir -p "$HOME/.config/bat/themes"
+cp "$THEME_DIR/bat.tmTheme" "$HOME/.config/bat/themes/${BAT_NAME}.tmTheme"
+
+# eza
+mkdir -p "$HOME/.config/eza"
+cp "$THEME_DIR/eza-theme.yml" "$HOME/.config/eza/theme.yml"
+
+# ── Live reloads ────────────────────────────────────────────────────
+
+bat cache --build 2>/dev/null || true
+
+# Neovim RPC reload
+for sock in "${XDG_RUNTIME_DIR:-/tmp}"/nvim-*.sock /tmp/nvim-*/0 ; do
+    [[ -S "$sock" ]] && nvim --server "$sock" --remote-send ":colorscheme ${NVIM_NAME}<CR>" 2>/dev/null || true
+done
+
+# tmux: source config to reload theme
+tmux source-file ~/.config/tmux/tmux.conf 2>/dev/null || true
+
+# Write current LAST (signals complete application)
+echo "$THEME" > "$CURRENT_FILE"
+
+echo "Switched to: $DISPLAY_NAME"
+echo ""
+echo "Auto-reloaded: Neovim, tmux, bat"
+echo "Restart needed: btop, lazygit, yazi"
+echo "New shell needed: fzf"

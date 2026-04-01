@@ -1,0 +1,31 @@
+[[plugin.prepend_previewers]]
+url = "*.md"
+run = 'faster-piper --rely-on-preloader'
+
+[[plugin.prepend_preloaders]]
+url = "*.md"
+run = 'faster-piper -- CLICOLOR_FORCE=1 glow -w=$w -s=dark "$1"'
+
+[mgr]
+ratio = [1, 4, 3]
+show_hidden = false
+
+[opener]
+edit = [
+    { run = 'bash ~/.config/yazi/scripts/open-editor.sh "$@"', desc = "Edit file", block = true },
+]
+open = [
+    { run = 'bash ~/.config/yazi/scripts/open-default.sh "$@"', desc = "Open with default app" },
+]
+[open]
+rules = [
+    { url = "*.pdf", use = ["open"] },
+    { url = "*.md", use = ["edit"] },
+    { url = "*.markdown", use = ["edit"] },
+    { url = "*.html", use = ["edit", "open"] },
+    { url = "*.htm", use = ["edit", "open"] },
+    { mime = "text/*", use = ["edit"] },
+    { mime = "application/json", use = ["edit"] },
+    { mime = "*/javascript", use = ["edit"] },
+    { url = "*", use = ["open"] },
+]

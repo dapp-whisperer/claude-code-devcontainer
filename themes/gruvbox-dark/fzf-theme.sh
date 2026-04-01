@@ -1,0 +1,19 @@
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+  --color=bg+:#3c3836 \
+  --color=bg:#282828 \
+  --color=border:#504945 \
+  --color=fg:#ebdbb2 \
+  --color=gutter:#282828 \
+  --color=header:#fe8019 \
+  --color=hl+:#83a598 \
+  --color=hl:#83a598 \
+  --color=info:#7c6f64 \
+  --color=marker:#d3869b \
+  --color=pointer:#d3869b \
+  --color=prompt:#83a598 \
+  --color=query:#ebdbb2:regular \
+  --color=scrollbar:#504945 \
+  --color=separator:#fe8019 \
+  --color=spinner:#d3869b"
+
+export BAT_THEME="gruvbox-dark"

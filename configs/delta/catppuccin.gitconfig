@@ -1,0 +1,40 @@
+[delta "catppuccin-mocha"]
+    # Catppuccin Mocha palette for delta
+    # https://github.com/catppuccin/delta
+
+    # Syntax highlighting
+    syntax-theme = Catppuccin Mocha
+
+    # Diff backgrounds - muted tints instead of harsh solid colors
+    minus-style = syntax "#3B1219"
+    minus-emph-style = syntax "#531B25"
+    minus-non-emph-style = syntax "#3B1219"
+    plus-style = syntax "#1B2B20"
+    plus-emph-style = syntax "#2B4B30"
+    plus-non-emph-style = syntax "#1B2B20"
+
+    # Map colors (for moved code detection)
+    map-styles = bold purple "#1e1e2e" => syntax "#1B2B20", bold cyan "#1e1e2e" => syntax "#3B1219"
+
+    # Line numbers
+    line-numbers-minus-style = "#f38ba8"
+    line-numbers-plus-style = "#a6e3a1"
+    line-numbers-zero-style = "#585b70"
+
+    # Hunk header
+    hunk-header-style = syntax bold
+    hunk-header-decoration-style = "#585b70" box
+
+    # Blame
+    blame-palette = "#1e1e2e" "#181825" "#11111b" "#313244" "#45475a"
+
+    # Merge conflicts
+    merge-conflict-begin-symbol = ~
+    merge-conflict-end-symbol = ~
+    merge-conflict-ours-diff-header-style = bold "#f9e2af"
+    merge-conflict-theirs-diff-header-style = bold "#89b4fa"
+    merge-conflict-ours-diff-header-decoration-style = "#f9e2af" box
+    merge-conflict-theirs-diff-header-decoration-style = "#89b4fa" box
+
+    # Zero style (unchanged lines) - use default fg on base background
+    zero-style = syntax

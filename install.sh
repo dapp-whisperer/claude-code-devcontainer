@@ -214,6 +214,12 @@ cmd_template() {
   cp "$SCRIPT_DIR/post_install.py" "$devcontainer_dir/"
   cp "$SCRIPT_DIR/.zshrc" "$devcontainer_dir/"
 
+  # Copy personal dev environment configs
+  rm -rf "$devcontainer_dir/configs" "$devcontainer_dir/themes" "$devcontainer_dir/scripts"
+  cp -R "$SCRIPT_DIR/configs" "$devcontainer_dir/configs"
+  cp -R "$SCRIPT_DIR/themes" "$devcontainer_dir/themes"
+  cp -R "$SCRIPT_DIR/scripts" "$devcontainer_dir/scripts"
+
   # Restore preserved mounts
   if [[ -n "$preserved_mounts" ]]; then
     merge_mounts_from_file "$devcontainer_json" "$preserved_mounts"
